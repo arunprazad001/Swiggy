@@ -24,24 +24,31 @@ public class CustomerController {
     private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @GetMapping("/getAll")
-    public List<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public List<Customer> getAllCustomers(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "name") String sortBy) {
+        logger.info("Fetching all customers based on parameters pageNo :{} pageSize: {} " +
+                "and sortBy :{}",page,size,sortBy);
+        return customerService.getAllCustomers(page,size,sortBy);
     }
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public void addCustomer(@Valid  @RequestBody Customer customer) {
-        logger.info("Received request to create customer:{}",customer);
+        logger.info("Received request to add customer:{}",customer);
         customerService.addCustomer(customer);
     }
 
     @GetMapping("get/{id}")
     public Customer getCustomerById(@PathVariable String id) {
+        logger.info("Received request to get customer by customerId: {}",id);
         return customerService.getCustomerById(id);
     }
 
     @GetMapping("get/{id}/orders")
     public List<Order> getCustomerOrderHistory(@PathVariable String id) {
+        logger.info("Received request to fetch customer order history by customerId: {} ",id);
         return orderService.getCustomerOrderHistory(id);
     }
+
 }

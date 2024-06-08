@@ -1,25 +1,53 @@
 package com.masai.Swiggy.dao;
 
 import com.masai.Swiggy.entity.Restaurant;
+import com.masai.Swiggy.repository.RestaurantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-@Repository
-public class RestaurantDAO {
-    private List<Restaurant> restaurants = new ArrayList<>();
+import java.util.stream.Collectors;
 
-    public List<Restaurant> findAll() {
-        return restaurants;
+@Component
+public class RestaurantDAO {
+    private final RestaurantRepository restaurantRepository;
+
+    @Autowired
+    public RestaurantDAO(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
+
+    public List<Restaurant> findAll(int pageNo, int pageSize, String sortBy) {
+        List<Restaurant>restaurants=restaurantRepository.findAll();
+        Comparator<Restaurant> comparator;
+        switch (sortBy) {
+            case "name":
+                comparator = Comparator.comparing(Restaurant::getName);
+                break;
+            case "address":
+                comparator = Comparator.comparing(Restaurant::getAddress);
+                break;
+            default:
+                comparator = Comparator.comparing(Restaurant::getAddress);
+                break;
+        }
+        return restaurants.stream()
+                .sorted(comparator)
+                .skip((pageNo - 1) * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
     }
 
     public void save(Restaurant restaurant) {
-        restaurants.add(restaurant);
+        restaurantRepository.save(restaurant);
     }
 
     public Restaurant findById(String restaurantId) {
-        return restaurants.stream()
-                .filter(r -> r.getRestaurantId().equals(restaurantId))
-                .findFirst()
-                .orElse(null);
+       return restaurantRepository.findByRestaurantId(restaurantId);
+    }
+
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
     }
 }
