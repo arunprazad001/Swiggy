@@ -11,8 +11,8 @@ public class RestaurantService {
     @Autowired
     private RestaurantDAO restaurantDAO;
 
-    public List<Restaurant> getAllRestaurants() {
-        return restaurantDAO.findAll();
+    public List<Restaurant> getAllRestaurants(int pageNo,int pageSize,String sortBy) {
+        return restaurantDAO.findAll(pageNo,pageSize,sortBy);
     }
 
     public void addRestaurant(Restaurant restaurant) {
@@ -21,5 +21,8 @@ public class RestaurantService {
 
     public Restaurant getRestaurantById(String restaurantId) {
         return restaurantDAO.findById(restaurantId);
+    }
+    public List<Restaurant>getAll(){
+        return restaurantDAO.getAllRestaurants();
     }
 }

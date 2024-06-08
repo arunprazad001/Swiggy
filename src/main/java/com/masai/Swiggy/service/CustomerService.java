@@ -11,9 +11,14 @@ public class CustomerService {
     @Autowired
     private CustomerDAO customerDAO;
 
-    public List<Customer> getAllCustomers() {
-        return customerDAO.findAll();
+    public List<Customer> getAllCustomers(int pageNo,int pageSize,String sortBy) {
+        return customerDAO.findAll(pageNo,pageSize,sortBy);
     }
+
+    public List<Customer> getAll(){
+        return customerDAO.getAll();
+    }
+
 
     public void addCustomer(Customer customer) {
         customerDAO.save(customer);

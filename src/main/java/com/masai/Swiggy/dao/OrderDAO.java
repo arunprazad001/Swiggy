@@ -1,34 +1,45 @@
 package com.masai.Swiggy.dao;
+
 import com.masai.Swiggy.entity.Order;
+import com.masai.Swiggy.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
-@Repository
-public class OrderDAO {
-    private List<Order> orders = new ArrayList<>();
+import java.util.stream.Collectors;
 
-    public List<Order> findAll() {
-        return orders;
+@Component
+public class OrderDAO {
+   private final OrderRepository orderRepository;
+
+   @Autowired
+    public OrderDAO(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public List<Order> findAll(int pageNo, int pageSize, String sortBy) {
+        List<Order> orders=orderRepository.findAll();
+        return orders.stream()
+                .sorted(Comparator.comparing(Order::getOrderStatus))
+                .skip((pageNo-1)*pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+
     }
 
     public void save(Order order) {
-        orders.add(order);
+        orderRepository.save(order);
     }
 
     public Order findById(String orderId) {
-        return orders.stream()
-                .filter(o -> o.getOrderId().equals(orderId))
-                .findFirst()
-                .orElse(null);
+      return orderRepository.findByOrderId(orderId);
     }
 
     public List<Order> findByCustomerId(String customerId) {
-        List<Order> customerOrders = new ArrayList<>();
-        for (Order order : orders) {
-            if (order.getCustomerId().equals(customerId)) {
-                customerOrders.add(order);
-            }
-        }
-        return customerOrders;
+       return orderRepository.findByCustomerId(customerId);
+    }
+    public List<Order>getAllOrders(){
+        return orderRepository.findAll();
     }
 }

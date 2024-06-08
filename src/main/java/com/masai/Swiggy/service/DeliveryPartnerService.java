@@ -11,8 +11,8 @@ public class DeliveryPartnerService {
     @Autowired
     private DeliveryPartnerDAO deliveryPartnerDAO;
 
-    public List<DeliveryPartner> getAllDeliveryPartners() {
-        return deliveryPartnerDAO.findAll();
+    public List<DeliveryPartner> getAllDeliveryPartners(int pageNo, int pageSize, String sortBy) {
+        return deliveryPartnerDAO.findAll(pageNo,pageSize,sortBy);
     }
 
     public void addDeliveryPartner(DeliveryPartner deliveryPartner) {
@@ -21,5 +21,8 @@ public class DeliveryPartnerService {
 
     public DeliveryPartner getDeliveryPartnerById(String deliveryPartnerId) {
         return deliveryPartnerDAO.findById(deliveryPartnerId);
+    }
+    public List<DeliveryPartner>getAllPartners(){
+        return deliveryPartnerDAO.getAllPartners();
     }
 }

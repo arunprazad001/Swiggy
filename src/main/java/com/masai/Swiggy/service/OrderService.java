@@ -22,8 +22,8 @@ public class OrderService {
     @Autowired
     private DeliveryPartnerDAO deliveryPartnerDAO;
 
-    public List<Order> getAllOrders() {
-        return orderDAO.findAll();
+    public List<Order> getAllOrders(int pageNo, int pageSize, String sortBy) {
+        return orderDAO.findAll(pageNo,pageSize,sortBy);
     }
 
     public void placeOrder(Order order) {
@@ -66,5 +66,9 @@ public class OrderService {
             throw new IllegalArgumentException("Customer ID not found");
         }
         return orderDAO.findByCustomerId(customerId);
+    }
+
+    public List<Order> getAllOrders(){
+        return orderDAO.getAllOrders();
     }
 }
