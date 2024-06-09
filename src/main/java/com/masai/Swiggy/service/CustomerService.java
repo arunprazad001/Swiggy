@@ -24,6 +24,10 @@ public class CustomerService {
         customerDAO.save(customer);
     }
 
+    public Customer createCustomer(Customer customer){
+        return customerDAO.add(customer);
+    }
+
     public Customer getCustomerById(String customerId) {
         return customerDAO.findById(customerId);
     }
