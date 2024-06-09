@@ -26,9 +26,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .requestMatchers(HttpMethod.GET, "/api/**").hasRole("USER")
-                .requestMatchers("/api/**").hasRole("ADMIN")
-                .requestMatchers("/api/users/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/orders/**", "/customers/**", "/restaurants/**", "/delivery-partners/**").hasRole("USER")
+                .requestMatchers("/orders/**", "/customers/**", "/restaurants/**", "/delivery-partners/**").hasRole("ADMIN")
+                .requestMatchers("/users/register").permitAll()
                 .anyRequest().authenticated();
         return http.build();
     }
@@ -46,8 +46,4 @@ public class SecurityConfig {
         return auth.build();
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-    }
 }
